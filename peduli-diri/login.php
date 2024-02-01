@@ -4,20 +4,24 @@ if (isset($_POST['masuk'])) {
     $nama = $_POST['nama'];
     $nik = $_POST['nik'];
 
-    $configTxt = file_get_contents('config.txt');
-    $rowData = explode("\n", $configTxt);
-    array_shift($rowData);
-    foreach ($rowData as $row) {
-        $col = explode("|", $row);
-        if ($col[0] == $nik && $col[1] == $nama) {
-            $_SESSION['nik'] = $col[0];
-            header('Location: index.php');
-        } else {
-            echo '<script>alert("Login gagal!")</script>';
-        }
+    $servername = "localhost";
+    $username = "Hadooyy";
+    $password = "123";
+    $dbname = "peduli_diri";
+    $conn = new mysqli($servername, $username, $password, $dbname);
+    
+    // Mengecek apakah NIK dan nama ada di database
+    $sql = "SELECT * FROM config WHERE nik='$nik' AND nama='$nama'";
+    $result = $conn->query($sql);
+    if ($result->num_rows > 0) {
+        $_SESSION['nik'] = $nik;
+        header('Location: index.php');
+    } else {
+        echo '<script>alert("Login gagal!")</script>';
     }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">

@@ -1,28 +1,31 @@
 <?php
 $title = 'Isi Data';
 include 'layouts/head.php';
-$catatanTxt = file_get_contents('data/' . $_SESSION['nik'] . '.txt');
-$catatanRowData = explode("\n", $catatanTxt);
-array_shift($catatanRowData);
-$idTergede = count($catatanRowData) + 1;
+
+$servername = "localhost";
+$username = "Hadooyy";
+$password = "123";
+$dbname = "peduli_diri";
+$conn = new mysqli($servername, $username, $password, $dbname);
 
 if (isset($_POST['simpan'])) {
-    $id = $_POST['id'];
+    $id = $_SESSION['nik']; // Use the session nik as the id
     $tanggal = $_POST['tanggal'];
     $waktu = $_POST['waktu'];
     $lokasi = $_POST['lokasi'];
     $suhu = $_POST['suhu'];
 
-    $catatanFile = fopen('data/' . $_SESSION['nik'] . '.txt', 'a');
-    $data = "\n$id|$tanggal|$waktu|$lokasi|$suhu";
-    $result = fwrite($catatanFile, $data);
+    // Insert data into the data table
+    $sql = "INSERT INTO data (id, tanggal, jam, lokasi, suhu) VALUES ('$id', '$tanggal', '$waktu', '$lokasi', '$suhu')";
+    $result = $conn->query($sql);
+
     if ($result) {
         echo '<script>alert("Data berhasil!");document.location.href = "catatan.php"</script>';
     } else {
         echo '<script>alert("Data gagal!")</script>';
     }
-    fclose($catatanFile);
 }
+
 ?>
 <div class="card text-center">
     <div class="card-header">

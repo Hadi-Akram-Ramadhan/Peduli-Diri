@@ -28,11 +28,11 @@ if (!isset($_SESSION['nik'])) {
         <div class="card mb-3 mt-5">
             <div class="row g-0">
                 <div class="col-md-2 text-center my-auto">
-                    <i class="fa-solid fa-plane-departure" style="font-size: 5rem;"></i>
+                    <i class="bi bi-backpack3"></i>
                 </div>
                 <div class="col-md-10">
                     <div class="card-body">
-                        <h1 class="card-title">Peduli Diri</h1>
+                        <h1 class="card-title">Catatan Perjalanan</h1>
                         <ul class="nav nav-pills">
                             <li class="nav-item">
                                 <a class="nav-link <?= $title == 'Home' ? 'active' : ''; ?>" href="index.php">Home</a>
