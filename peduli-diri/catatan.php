@@ -1,9 +1,15 @@
 <?php
 $title = 'Catatan';
 include 'layouts/head.php';
-$catatanTxt = file_get_contents('data/' . $_SESSION['nik'] . '.txt');
-$catatanRowData = explode("\n", $catatanTxt);
-array_shift($catatanRowData);
+
+$servername = "localhost";
+    $username = "Hadooyy";
+    $password = "123";
+    $dbname = "peduli_diri";
+    $conn = new mysqli($servername, $username, $password, $dbname);
+// Mengecek apakah NIK ada di database dan mengambil data catatan
+$sql = "SELECT * FROM data WHERE id='".$_SESSION['nik']."'";
+$result = $conn->query($sql);
 ?>
 <div class="card">
     <div class="card-header text-center">
@@ -37,24 +43,19 @@ array_shift($catatanRowData);
             <tbody>
                 <?php
                 $no = 1;
-                foreach ($catatanRowData as $catatan => $data) {
-                    $col = explode("|", $data);
-                    $ctn[$catatan]['id'] = $col[0];
-                    $ctn[$catatan]['tanggal'] = $col[1];
-                    $ctn[$catatan]['waktu'] = $col[2];
-                    $ctn[$catatan]['lokasi'] = $col[3];
-                    $ctn[$catatan]['suhu'] = $col[4];
+                if ($result->num_rows > 0) {
+                    while($row = $result->fetch_assoc()) {
                 ?>
                     <tr>
                         <th scope="row"><?= $no++; ?></th>
-                        <td><?= $ctn[$catatan]['tanggal']; ?></td>
-                        <td><?= $ctn[$catatan]['waktu']; ?></td>
-                        <td><?= $ctn[$catatan]['lokasi']; ?></td>
-                        <td><?= $ctn[$catatan]['suhu']; ?>&deg;C</td>
+                        <td><?= $row['tanggal']; ?></td>
+                        <td><?= $row['jam']; ?></td>
+                        <td><?= $row['lokasi']; ?></td>
+                        <td><?= $row['suhu']; ?>°C</td>
                     </tr>
-                <?php } ?>
-                <?php
-                if ($catatanRowData == null) {
+                <?php 
+                    }
+                } else {
                     echo '<td colspan="5" class="fw-light fst-italic">Maaf data tidak ada.</td>';
                 }
                 ?>

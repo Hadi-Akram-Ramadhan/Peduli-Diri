@@ -3,31 +3,33 @@ if (isset($_POST['daftar'])) {
     $nama = htmlspecialchars($_POST['nama']);
     $nik = htmlspecialchars($_POST['nik']);
 
-    $configTxt = file_get_contents('config.txt');
-    $rowData = explode("\n", $configTxt);
-    array_shift($rowData);
-    foreach ($rowData as $row) {
-        $col = explode("|", $row);
-        if ($col[0] == $nik) {
-            echo '<script>alert("NIK sudah ada!");document.location.href = "register.php"</script>';
-            exit;
-        }
+    // Membuat koneksi ke database
+
+    // Mengecek koneksi
+    if ($conn->connect_error) {
+        die("Koneksi gagal: " . $conn->connect_error);
     }
 
-    $fileConfig = fopen('config.txt', 'a');
-    $data = "\n$nik|$nama";
-    $result = fwrite($fileConfig, $data);
-    if ($result) {
-        $fileCatatan = fopen('data/' . $nik . '.txt', 'w');
-        fwrite($fileCatatan, 'ID|TANGGAL|JAM|LOKASI|SUHU');
-        fclose($fileCatatan);
+    // Mengecek apakah NIK sudah ada
+    $sql = "SELECT * FROM config WHERE nik='$nik'";
+    $result = $conn->query($sql);
+    if ($result->num_rows > 0) {
+        echo '<script>alert("NIK sudah ada!");document.location.href = "register.php"</script>';
+        exit;
+    }
+
+    // Menyimpan data ke database
+    $sql = "INSERT INTO config (nik, nama) VALUES ('$nik', '$nama')";
+    if ($conn->query($sql) === TRUE) {
         echo '<script>alert("Register berhasil!");document.location.href = "login.php"</script>';
     } else {
         echo '<script>alert("Register gagal!")</script>';
     }
-    fclose($fileConfig);
+
+    $conn->close();
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">

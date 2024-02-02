@@ -1,15 +1,21 @@
 <?php
 $title = 'Home';
 include 'layouts/head.php';
-$configTxt = file_get_contents('config.txt');
-$rowData = explode("\n", $configTxt);
-array_shift($rowData);
-foreach ($rowData as $row) {
-    $col = explode("|", $row);
-    if ($col[0] == $_SESSION['nik']) {
+
+$servername = "localhost";
+    $username = "Hadooyy";
+    $password = "123";
+    $dbname = "peduli_diri";
+    $conn = new mysqli($servername, $username, $password, $dbname);
+    
+// Mengecek apakah NIK ada di database
+$sql = "SELECT * FROM config WHERE nik='".$_SESSION['nik']."'";
+$result = $conn->query($sql);
+if ($result->num_rows > 0) {
+    while($row = $result->fetch_assoc()) {
         $user = [
-            'nik' => $col[0],
-            'nama' => $col[1]
+            'nik' => $row['nik'],
+            'nama' => $row['nama']
         ];
     }
 }
